@@ -1,0 +1,9 @@
+.editor-containers {
+	width: 100%;
+	height: 100%;
+	flex: 1;
+}
+
+.editor-containers * {
+	font-family: 'mono-rg' !important;
+}

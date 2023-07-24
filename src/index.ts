@@ -5,12 +5,17 @@ import {
 	Button,
 	ButtonStyles,
 	ComputedState,
+	Div,
 	Header,
 	Sheet,
 	State,
 	Textarea,
+	UUID,
 	VStack,
 } from '@frugal-ui/base';
+import Map from 'lang-map';
+import * as Monaco from 'monaco-editor';
+import './editor.css';
 
 const rootName = 'Root';
 const rootPath = '';
@@ -37,9 +42,9 @@ export async function main() {
 	}
 
 	async function saveFile() {
-		if ((selectedFile.value == ''))
+		if (selectedFile.value == '')
 			return alert('Cannot save file: path not specified');
-		
+
 		try {
 			await writeFile(selectedFile.value, fileContents.value);
 			isSaved.value = true;
@@ -104,13 +109,43 @@ export async function main() {
 						}),
 					),
 
-					Textarea(fileContents, 'Type here')
-						.listen('input', () => (isSaved.value = false))
-						.cssHeight('100%'),
+					Div()
+						.access((self) => {
+							const editor = Monaco.editor.create(self, {
+								fontFamily: 'mono-rg',
+								automaticLayout: true,
+							});
+
+							Monaco.editor.setTheme('vs-dark');
+
+							self.addEventListener('input', () => {
+								isSaved.value = false;
+								fileContents.value = editor.getValue();
+							});
+							fileContents.addBinding({
+								uuid: new UUID(),
+								action: (newValue) => {
+									if (isEditSheetOpen.value == true) return;
+
+									editor.setValue(newValue);
+									const language = getLanguage(selectedFile.value);
+									Monaco.editor.setModelLanguage(editor.getModel()!, language)
+								}
+							});
+						})
+
+						.addToClass('editor-containers'),
 				)
 					.useDefaultPadding()
 					.useDefaultSpacing(),
 			),
 		),
 	);
+}
+
+function getLanguage(fileName: string) {
+	const extension = fileName.split('.').reverse()[0];
+	const language = Map.languages(extension)[0];
+	if (typeof language != 'string') return 'text/plain';
+	return language;
 }
