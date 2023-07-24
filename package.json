@@ -4,7 +4,8 @@
   "description": "File Manager for BasicFsExpress",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild src/index.ts --format=iife --global-name=APP --bundle --outdir=dist --loader:.woff=file --loader:.woff2=file --loader:.ttf=file --loader:.otf=file"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
     "@basicserver/filepicker": "^1.0.0",
     "@basicserver/fs-frontend": "^1.0.0",
     "@basicserver/savedialog": "^1.0.0",
-    "@frugal-ui/base": "^1.0.0-beta43"
+    "@frugal-ui/base": "^1.0.0-beta43",
+    "@frugal-ui/fds": "^0.0.1-beta2"
   }
 }
