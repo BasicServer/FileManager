@@ -1,6 +1,4 @@
 {
-  "name": "@basicserver/filemanager",
-  "version": "1.0.0",
   "description": "File Manager for BasicFsExpress",
   "main": "index.js",
   "scripts": {
