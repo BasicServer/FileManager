@@ -4,6 +4,6 @@
 	flex: 1;
 }
 
-.editor-containers * {
+.editor-containers span {
 	font-family: 'mono-rg' !important;
 }
