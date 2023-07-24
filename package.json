@@ -1,0 +1,25 @@
+{
+  "name": "@basicserver/filemanager",
+  "version": "1.0.0",
+  "description": "File Manager for BasicFsExpress",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BasicServer/FileManager.git"
+  },
+  "author": "viridian035",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BasicServer/FileManager/issues"
+  },
+  "homepage": "https://github.com/BasicServer/FileManager#readme",
+  "dependencies": {
+    "@basicserver/filepicker": "^1.0.0",
+    "@basicserver/fs-frontend": "^1.0.0",
+    "@basicserver/savedialog": "^1.0.0",
+    "@frugal-ui/base": "^1.0.0-beta43"
+  }
+}
