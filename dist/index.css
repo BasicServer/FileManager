@@ -627,7 +627,8 @@ h5 {
 .labels {
   font-size: small;
 }
-.list-items > * {
+.list-items > *,
+.list-items > div > * {
   color: inherit;
 }
 .list-items[aria-selected=true] {

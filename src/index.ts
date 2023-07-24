@@ -1,14 +1,14 @@
 import FilePicker, { Types } from '@basicserver/filepicker';
-import SaveDialog from '@basicserver/savedialog';
+import { readFile, writeFile } from '@basicserver/fs-frontend';
 import {
 	buildInterface,
 	Button,
+	ButtonStyles,
 	ComputedState,
-	HStack,
+	Header,
 	Sheet,
-	Spacer,
 	State,
-	Text,
+	Textarea,
 	VStack,
 } from '@frugal-ui/base';
 
@@ -24,41 +24,92 @@ export async function main() {
 			self.value = selectedFile.value == '';
 		},
 	});
-	const isCreateFileSheetOpen = new State(false);
 
-	function openFile() {
+	const isEditSheetOpen = new State(false);
+	const fileContents = new State('');
+	const isSaved = new State(false);
+	async function openFile() {
+		if (selectedFile.value == '')
+			return alert('Cannot open file: path not specified');
+		fileContents.value = await readFile(selectedFile.value);
+		isSaved.value = true;
+		isEditSheetOpen.value = true;
 	}
 
-	function createFile(filePath: string) {
+	async function saveFile() {
+		if ((selectedFile.value == ''))
+			return alert('Cannot save file: path not specified');
+		
+		try {
+			await writeFile(selectedFile.value, fileContents.value);
+			isSaved.value = true;
+		} catch (error) {
+			alert(`Failed to save file: ${error}`);
+		}
+	}
+
+	function closeEditor() {
+		function execute() {
+			isEditSheetOpen.value = false;
+			fileContents.value = '';
+			return;
+		}
+
+		if (isSaved.value == true) return execute();
+
+		const shouldProceed = confirm('Discard changes?');
+		if (shouldProceed == false) return;
+
+		execute();
 	}
 
 	buildInterface(
 		VStack(
-			HStack(
+			Header(
+				{
+					text: 'Your files',
+				},
 				Button({
-					accessibilityLabel: 'create new file',
-					iconName: 'add',
-					action: () => isCreateFileSheetOpen.value = !isCreateFileSheetOpen.value,
-				}),
-				Spacer(),
-				Button({
-					accessibilityLabel: 'open selected file',
-					text: 'Open',
+					accessibilityLabel: 'edit selected file',
+					iconName: 'edit',
+					text: 'Edit',
 					action: openFile,
 				}).toggleAttr('disabled', isOpenButtonDisabled),
-			)
-				.useDefaultPadding()
-				.useDefaultSpacing()
-				.cssBorderBottom('1px solid var(--line)'),
+			).cssBorderBottom('1px solid var(--lines)'),
 
 			FilePicker(rootName, selectedFile, [Types.File]),
 
 			Sheet(
 				{
-					isOpen: isCreateFileSheetOpen,
-					accessibilityLabel: 'create file',
+					accessibilityLabel: 'edit file',
+					isOpen: isEditSheetOpen,
 				},
-				SaveDialog(rootName, rootPath, createFile),
+				VStack(
+					Header(
+						{
+							text: 'Edit file',
+						},
+
+						Button({
+							style: ButtonStyles.Primary,
+							accessibilityLabel: 'save file',
+							text: 'Save',
+							action: saveFile,
+						}).toggleAttr('disabled', isSaved),
+
+						Button({
+							accessibilityLabel: 'close editor',
+							iconName: 'close',
+							action: closeEditor,
+						}),
+					),
+
+					Textarea(fileContents, 'Type here')
+						.listen('input', () => (isSaved.value = false))
+						.cssHeight('100%'),
+				)
+					.useDefaultPadding()
+					.useDefaultSpacing(),
 			),
 		),
 	);
