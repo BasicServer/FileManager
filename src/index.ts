@@ -13,11 +13,13 @@ import {
 	VStack,
 } from '@frugal-ui/base';
 import Map from 'lang-map';
+import StringCrypto from 'string-crypto';
 import * as Monaco from 'monaco-editor';
 import './editor.css';
 
 const rootName = 'Root';
 const rootPath = '';
+const Crypto = new StringCrypto();
 
 export async function main() {
 	const selectedFile = new State(rootPath);
