@@ -1,5 +1,5 @@
-import FilePicker, { SelectedItem, Types } from '@basicserver/filepicker';
-import { readFile, writeFile } from '@basicserver/fs-frontend';
+import FilePicker, {SelectedItem, Types} from '@basicserver/filepicker';
+import {readFile, writeFile} from '@basicserver/fs-frontend';
 import {
 	buildInterface,
 	Button,
@@ -7,33 +7,26 @@ import {
 	ComputedState,
 	Div,
 	Header,
+	Input,
+	Label,
+	Popover,
 	Sheet,
 	State,
+	TextInputCfg,
 	UUID,
-	VStack,
+	VStack
 } from '@frugal-ui/base';
+import {enc} from 'crypto-js';
+import {decrypt, encrypt} from 'crypto-js/aes';
 import Map from 'lang-map';
-import StringCrypto from 'string-crypto';
 import * as Monaco from 'monaco-editor';
 import './editor.css';
 
 const rootName = 'Root';
 const rootPath = '';
-const Crypto = new StringCrypto();
 
 export async function main() {
-	const selectedFile = new State(rootPath);
-	const selectedItem = new SelectedItem((item) => {
-		selectedFile.value = item.path ?? '';
-	});
-	const isOpenButtonDisabled = new ComputedState({
-		statesToBind: [selectedFile],
-		initialValue: false,
-		compute(self) {
-			self.value = selectedFile.value == '';
-		},
-	});
-
+	// Editing
 	const isEditSheetOpen = new State(false);
 	const fileContents = new State('');
 	const isSaved = new State(false);
@@ -43,18 +36,6 @@ export async function main() {
 		fileContents.value = await readFile(selectedFile.value);
 		isSaved.value = true;
 		isEditSheetOpen.value = true;
-	}
-
-	async function saveFile() {
-		if (selectedFile.value == '')
-			return alert('Cannot save file: path not specified');
-
-		try {
-			await writeFile(selectedFile.value, fileContents.value);
-			isSaved.value = true;
-		} catch (error) {
-			alert(`Failed to save file: ${error}`);
-		}
 	}
 
 	function closeEditor() {
@@ -72,6 +53,57 @@ export async function main() {
 		execute();
 	}
 
+	// Encryption
+	const password = new State('');
+	const isEncryptionPopoverOpen = new State(false);
+
+	function decryptFile() {
+		try {
+			const decrypted = decrypt(fileContents.value, password.value);
+			if (decrypted.sigBytes < 0) throw 'wrong password';
+			const res = decrypted.toString(enc.Utf8);
+			fileContents.value = res;
+			isSaved.value = false;
+		} catch {
+			alert('Decryption failed. Check your password');
+		}
+	}
+	function encryptFile() {
+		try {
+			const res = encrypt(fileContents.value, password.value).toString();
+			fileContents.value = res;
+			isSaved.value = false;
+		} catch (error) {
+			alert(`Encryption failed: ${error}`);
+		}
+	}
+
+	// File selection
+	const selectedFile = new State(rootPath);
+	const selectedItem = new SelectedItem((item) => {
+		selectedFile.value = item.path ?? '';
+	});
+	const isOpenButtonDisabled = new ComputedState({
+		statesToBind: [selectedFile],
+		initialValue: false,
+		compute(self) {
+			self.value = selectedFile.value == '';
+		},
+	});
+
+	// Saving
+	async function saveFile() {
+		if (selectedFile.value == '')
+			return alert('Cannot save file: path not specified');
+
+		try {
+			await writeFile(selectedFile.value, fileContents.value);
+			isSaved.value = true;
+		} catch (error) {
+			alert(`Failed to save file: ${error}`);
+		}
+	}
+
 	buildInterface(
 		VStack(
 			Header(
@@ -86,7 +118,9 @@ export async function main() {
 				}).toggleAttr('disabled', isOpenButtonDisabled),
 			).cssBorderBottom('1px solid var(--lines)'),
 
-			FilePicker(rootName, selectedFile.value, selectedItem, [Types.File]),
+			FilePicker(rootName, selectedFile.value, selectedItem, [
+				Types.File,
+			]),
 
 			Sheet(
 				{
@@ -98,6 +132,46 @@ export async function main() {
 						{
 							text: 'Edit file',
 						},
+
+						Popover({
+							accessibilityLabel: 'manage encryption',
+							isOpen: isEncryptionPopoverOpen,
+							toggle: Button({
+								accessibilityLabel: 'manage encryption',
+								iconName: 'key',
+								action: () =>
+									(isEncryptionPopoverOpen.value =
+										!isEncryptionPopoverOpen.value),
+							}),
+							content: VStack(
+								Label(
+									'Password',
+									Input(
+										new TextInputCfg(
+											password,
+											'**********',
+										),
+									).setAttr('type', 'password'),
+								),
+
+								Button({
+									accessibilityLabel: 'decrypt file',
+									iconName: 'lock_open',
+									text: 'Decrypt',
+									action: decryptFile,
+								}),
+								Button({
+									accessibilityLabel: 'encrypt file',
+									iconName: 'lock',
+									text: 'Encrypt',
+									action: encryptFile,
+								}),
+							)
+								.cssWidth('20rem')
+								.cssHeight('auto')
+								.useDefaultSpacing()
+								.useDefaultPadding(),
+						}),
 
 						Button({
 							style: ButtonStyles.Primary,
@@ -118,7 +192,6 @@ export async function main() {
 							const editor = Monaco.editor.create(self, {
 								fontFamily: 'mono-rg',
 								automaticLayout: true,
-								padding: '1rem',
 							});
 
 							Monaco.editor.setTheme('vs-dark');
@@ -130,12 +203,19 @@ export async function main() {
 							fileContents.addBinding({
 								uuid: new UUID(),
 								action: (newValue) => {
-									if (isEditSheetOpen.value == true) return;
+									//prevent infinite loop
+									if (self.contains(document.activeElement))
+										return;
 
 									editor.setValue(newValue);
-									const language = getLanguage(selectedFile.value);
-									Monaco.editor.setModelLanguage(editor.getModel()!, language)
-								}
+									const language = getLanguage(
+										selectedFile.value,
+									);
+									Monaco.editor.setModelLanguage(
+										editor.getModel()!,
+										language,
+									);
+								},
 							});
 						})
 
