@@ -1,4 +1,4 @@
-import FilePicker, { Types } from '@basicserver/filepicker';
+import FilePicker, { SelectedItem, Types } from '@basicserver/filepicker';
 import { readFile, writeFile } from '@basicserver/fs-frontend';
 import {
 	buildInterface,
@@ -9,7 +9,6 @@ import {
 	Header,
 	Sheet,
 	State,
-	Textarea,
 	UUID,
 	VStack,
 } from '@frugal-ui/base';
@@ -22,6 +21,9 @@ const rootPath = '';
 
 export async function main() {
 	const selectedFile = new State(rootPath);
+	const selectedItem = new SelectedItem((item) => {
+		selectedFile.value = item.path ?? '';
+	});
 	const isOpenButtonDisabled = new ComputedState({
 		statesToBind: [selectedFile],
 		initialValue: false,
@@ -82,7 +84,7 @@ export async function main() {
 				}).toggleAttr('disabled', isOpenButtonDisabled),
 			).cssBorderBottom('1px solid var(--lines)'),
 
-			FilePicker(rootName, selectedFile, [Types.File]),
+			FilePicker(rootName, selectedFile.value, selectedItem, [Types.File]),
 
 			Sheet(
 				{
@@ -114,6 +116,7 @@ export async function main() {
 							const editor = Monaco.editor.create(self, {
 								fontFamily: 'mono-rg',
 								automaticLayout: true,
+								padding: '1rem',
 							});
 
 							Monaco.editor.setTheme('vs-dark');
