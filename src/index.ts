@@ -9,8 +9,12 @@ import {
 	Header,
 	Input,
 	Label,
+	LocalStorageState,
 	Popover,
+	Select,
+	Separator,
 	Sheet,
+	Spacer,
 	State,
 	TextInputCfg,
 	UUID,
@@ -22,9 +26,26 @@ import Map from 'lang-map';
 import * as Monaco from 'monaco-editor';
 import './editor.css';
 
+// browser config
 const rootName = 'Root';
 const rootPath = '';
 
+// encryption config
+enum validClearPasswordPreferences {
+	Immediate = 'Immediately',
+	Encryption = 'After Encrypting',
+	Closing = 'When Closing',
+	Never = 'Never',
+};
+const defaultClearPasswordPreference = Object.keys(validClearPasswordPreferences)[0];
+const clearPasswordPreference = new LocalStorageState(
+	'clear-password',
+	defaultClearPasswordPreference,
+);
+if (Object.keys(validClearPasswordPreferences).indexOf(clearPasswordPreference.value as any) == -1)
+	clearPasswordPreference.value = defaultClearPasswordPreference;
+
+// main
 export async function main() {
 	document.title = rootName;
 
@@ -175,6 +196,25 @@ export async function main() {
 									text: 'Encrypt',
 									action: encryptFile,
 								}),
+
+								Separator(),
+
+								Label(
+									'Clear password',
+									Select(
+										clearPasswordPreference,
+										new State(
+											Object.entries(validClearPasswordPreferences).map(
+												(preference) => {
+													return {
+														label: preference[1],
+														value: preference[0],
+													};
+												},
+											),
+										),
+									),
+								),
 							)
 								.cssWidth('20rem')
 								.cssHeight('auto')
