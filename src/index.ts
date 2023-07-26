@@ -31,18 +31,22 @@ const rootName = 'Root';
 const rootPath = '';
 
 // encryption config
-enum validClearPasswordPreferences {
+enum ClearPasswordPreferences {
 	Immediate = 'Immediately',
 	Encryption = 'After Encrypting',
 	Closing = 'When Closing',
 	Never = 'Never',
-};
-const defaultClearPasswordPreference = Object.keys(validClearPasswordPreferences)[0];
+}
+const defaultClearPasswordPreference = Object.values(ClearPasswordPreferences)[0];
 const clearPasswordPreference = new LocalStorageState(
 	'clear-password',
 	defaultClearPasswordPreference,
 );
-if (Object.keys(validClearPasswordPreferences).indexOf(clearPasswordPreference.value as any) == -1)
+if (
+	Object.values(ClearPasswordPreferences).indexOf(
+		clearPasswordPreference.value as any,
+	) == -1
+)
 	clearPasswordPreference.value = defaultClearPasswordPreference;
 
 // main
@@ -65,6 +69,15 @@ export async function main() {
 		function execute() {
 			isEditSheetOpen.value = false;
 			fileContents.value = '';
+			
+			if (
+				clearPasswordPreference.value ==
+					ClearPasswordPreferences.Immediate ||
+				clearPasswordPreference.value ==
+					ClearPasswordPreferences.Closing
+			)
+				password.value = '';
+
 			return;
 		}
 
@@ -87,6 +100,12 @@ export async function main() {
 			const res = decrypted.toString(enc.Utf8);
 			fileContents.value = res;
 			isSaved.value = false;
+
+			if (
+				clearPasswordPreference.value ==
+				ClearPasswordPreferences.Immediate
+			)
+				password.value = '';
 		} catch {
 			alert('Decryption failed. Check your password');
 		}
@@ -96,6 +115,14 @@ export async function main() {
 			const res = encrypt(fileContents.value, password.value).toString();
 			fileContents.value = res;
 			isSaved.value = false;
+
+			if (
+				clearPasswordPreference.value ==
+					ClearPasswordPreferences.Immediate ||
+				clearPasswordPreference.value ==
+					ClearPasswordPreferences.Encryption
+			)
+				password.value = '';
 		} catch (error) {
 			alert(`Encryption failed: ${error}`);
 		}
@@ -204,14 +231,14 @@ export async function main() {
 									Select(
 										clearPasswordPreference,
 										new State(
-											Object.entries(validClearPasswordPreferences).map(
-												(preference) => {
-													return {
-														label: preference[1],
-														value: preference[0],
-													};
-												},
-											),
+											Object.values(
+												ClearPasswordPreferences,
+											).map((preference) => {
+												return {
+													label: preference,
+													value: preference,
+												};
+											}),
 										),
 									),
 								),
