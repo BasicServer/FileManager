@@ -26,6 +26,8 @@ const rootName = 'Root';
 const rootPath = '';
 
 export async function main() {
+	document.title = rootName;
+
 	// Editing
 	const isEditSheetOpen = new State(false);
 	const fileContents = new State('');
@@ -81,7 +83,12 @@ export async function main() {
 	// File selection
 	const selectedFile = new State(rootPath);
 	const selectedItem = new SelectedItem((item) => {
-		selectedFile.value = item.path ?? '';
+		//update title
+		if (item.isDirectory == true && item.name != undefined) document.title = item.name;
+
+		//select
+		if (item.isDirectory == false) selectedFile.value = item.path ?? '';
+		else selectedFile.value = '';
 	});
 	const isOpenButtonDisabled = new ComputedState({
 		statesToBind: [selectedFile],
@@ -119,6 +126,7 @@ export async function main() {
 			).cssBorderBottom('1px solid var(--lines)'),
 
 			FilePicker(rootName, selectedFile.value, selectedItem, [
+				Types.Directory,
 				Types.File,
 			]),
 
