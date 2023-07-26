@@ -1,5 +1,5 @@
-import FilePicker, {SelectedItem, Types} from '@basicserver/filepicker';
-import {readFile, writeFile} from '@basicserver/fs-frontend';
+import FilePicker, { SelectedItem, Types } from '@basicserver/filepicker';
+import { readFile, writeFile } from '@basicserver/fs-frontend';
 import {
 	buildInterface,
 	Button,
@@ -14,10 +14,10 @@ import {
 	State,
 	TextInputCfg,
 	UUID,
-	VStack
+	VStack,
 } from '@frugal-ui/base';
-import {enc} from 'crypto-js';
-import {decrypt, encrypt} from 'crypto-js/aes';
+import { enc } from 'crypto-js';
+import { decrypt, encrypt } from 'crypto-js/aes';
 import Map from 'lang-map';
 import * as Monaco from 'monaco-editor';
 import './editor.css';
@@ -84,7 +84,8 @@ export async function main() {
 	const selectedFile = new State(rootPath);
 	const selectedItem = new SelectedItem((item) => {
 		//update title
-		if (item.isDirectory == true && item.name != undefined) document.title = item.name;
+		if (item.isDirectory == true && item.name != undefined)
+			document.title = item.name;
 
 		//select
 		if (item.isDirectory == false) selectedFile.value = item.path ?? '';
@@ -226,8 +227,14 @@ export async function main() {
 								},
 							});
 						})
-
-						.addToClass('editor-containers'),
+						.addToClass('editor-containers')
+						.registerKeyboardShortcuts({
+							modifiers: ['commandOrControl'],
+							key: 's',
+							action: (e) => {
+								e.preventDefault(), saveFile();
+							},
+						}),
 				)
 					.useDefaultPadding()
 					.useDefaultSpacing(),
