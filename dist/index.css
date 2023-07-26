@@ -52,18 +52,18 @@
     transition: none !important;
   }
 }
-.animating-in,
+.frugal-ui-components.animating-in,
 .animating-out {
   transition: all 0.1s ease-out;
 }
-.animation-standard.in-hidden-animation-state {
+.frugal-ui-components.animation-standard.in-hidden-animation-state {
   opacity: 0;
   transform: translateY(1rem);
 }
-.animation-list-item {
+.frugal-ui-components.animation-list-item {
   transform-origin: top;
 }
-.animation-list-item.in-hidden-animation-state {
+.frugal-ui-components.animation-list-item.in-hidden-animation-state {
   transform: scaleY(0);
   margin-bottom: calc(-1 * var(--element-height)) !important;
   opacity: 0;
@@ -73,14 +73,14 @@
   opacity: 0;
 }
 @media (min-width: 520px) {
-  .animation-scene.in-hidden-animation-state {
+  .frugal-ui-components.animation-scene.in-hidden-animation-state {
     transform: translateY(1rem);
   }
 }
-.animation-scene.scenes-column.in-hidden-animation-state {
+.frugal-ui-components.animation-scene.scenes-column.in-hidden-animation-state {
   transform: none;
 }
-.draggable-items {
+.frugal-ui-components.draggable-items {
   transition: transform 0.2s, border-radius 0.2s;
 }
 :root {
@@ -92,7 +92,7 @@
   --gap: 0.5rem;
   --gap-sm: 0.25rem;
 }
-* {
+.frugal-ui-components {
   box-sizing: border-box;
 }
 html,
@@ -102,143 +102,139 @@ body {
   margin: 0rem;
   overflow: hidden;
 }
-[hidden] {
+.frugal-ui-components[hidden] {
   display: none !important;
 }
-.using-default-padding {
+.frugal-ui-components.using-default-padding {
   padding: var(--padding-md);
 }
-.using-default-padding:is(.stacks-vertical, .stacks-horizontal) {
+.frugal-ui-components.using-default-padding:is(.stacks-vertical, .stacks-horizontal) {
   padding: var(--padding-lg);
 }
-.draggable-items {
+.frugal-ui-components.draggable-items {
   -webkit-user-drag: none;
   -webkit-user-select: none;
   user-select: none;
 }
-button[disabled],
-input[disabled] {
+button.frugal-ui-components[disabled],
+input.frugal-ui-components[disabled] {
   opacity: 0.2;
   cursor: not-allowed;
 }
-pre {
+pre.frugal-ui-components {
   font-family: mono-rg;
   margin: 0rem;
 }
-.draggable-items.dragging {
+.frugal-ui-components.draggable-items.dragging {
   transform: scale(0.95);
   border-radius: var(--corners);
 }
-.boxes {
+.frugal-ui-components.boxes {
   overflow: auto !important;
   width: 100%;
   height: 100%;
   border-radius: var(--corners);
 }
-.buttons,
-.selects,
-.submits {
+.frugal-ui-components.buttons,
+.frugal-ui-components.selects,
+.frugal-ui-components.submits {
   border-radius: var(--corners);
   padding: var(--padding-md);
 }
-.buttons {
+.frugal-ui-components.buttons {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--gap);
 }
-.buttons span {
+.buttons span.frugal-ui-components {
   color: inherit;
   cursor: inherit;
 }
-.buttons span:empty {
+.buttons span.frugal-ui-components:empty {
   display: none;
 }
-.button-groups {
+.frugal-ui-components.button-groups {
   border-radius: var(--corners);
   display: flex;
 }
-.button-groups .buttons {
+.button-groups .frugal-ui-components.buttons {
   width: 100%;
   flex: 1;
   border-radius: 0rem;
   border-left-width: 0px;
   border-right-width: 0px;
 }
-.button-groups > .buttons:first-child {
+.button-groups > .frugal-ui-components.buttons:first-child {
   border-top-left-radius: var(--corners);
   border-bottom-left-radius: var(--corners);
   border-left-width: 1px;
 }
-.button-groups > .buttons:last-child {
+.button-groups > .frugal-ui-components.buttons:last-child {
   border-top-right-radius: var(--corners);
   border-bottom-right-radius: var(--corners);
   border-right-width: 1px;
 }
-.buttons:has(.button-texts:empty) {
+.frugal-ui-components.buttons:has(.button-texts:empty) {
   flex: 0;
   padding: var(--padding-sm);
 }
-.headers {
+.frugal-ui-components.headers {
   padding: var(--padding-md);
   min-height: 3.75rem;
 }
-h1,
-h2,
-h3,
-h4,
-h5 {
+.frugal-ui-components:is(h1, h2, h3, h4, h5) {
   margin: 0rem;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.icons {
+.frugal-ui-components.icons {
   font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.labels {
+.frugal-ui-components.labels {
   display: flex;
   display: flex;
   flex-direction: column;
 }
-.stacks-vertical[role=list] {
+.frugal-ui-components.stacks-vertical[role=list] {
   justify-content: start;
 }
-.list-items {
+.frugal-ui-components.list-items {
   width: 100%;
   padding: var(--padding-md);
   display: flex;
   flex-shrink: 0;
   cursor: pointer;
 }
-.list-items > * {
+.list-items > .frugal-ui-components {
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
 }
-.popover-contents {
+.frugal-ui-components.popover-contents {
   border-radius: var(--corners);
   z-index: 1;
 }
-.popover-containers[open] > .popover-contents {
+.popover-containers[open] > .frugal-ui-components.popover-contents {
   animation: appear 0.2s;
 }
-.sheet-containers:not([open]) {
+.frugal-ui-components.sheet-containers:not([open]) {
   visibility: hidden;
   animation: delay-hide 0.2s;
 }
-.sheet-containers[open] {
+.frugal-ui-components.sheet-containers[open] {
   opacity: 1;
   visibility: visible;
   pointer-events: all;
 }
-.sheet-containers {
+.frugal-ui-components.sheet-containers {
   border: none;
   position: fixed;
   top: 0rem;
@@ -253,30 +249,30 @@ h5 {
   transition: opacity 0.2s;
   z-index: 1;
 }
-.sheet-contents {
+.frugal-ui-components.sheet-contents {
   width: 100%;
   height: 100%;
   transform: translateY(1rem);
   transition: transform 0.2s;
 }
-.sheet-containers[open] > .sheet-contents {
+.sheet-containers[open] > .frugal-ui-components.sheet-contents {
   transform: translateY(0);
 }
-.popover-containers {
+.frugal-ui-components.popover-containers {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.popover-contents {
+.frugal-ui-components.popover-contents {
   position: fixed;
   top: 0px;
   left: 0px;
   visibility: hidden;
 }
-.popover-containers[open] .popover-contents {
+.frugal-ui-components.popover-containers[open] .popover-contents {
   visibility: visible;
 }
-.scroll-areas {
+.frugal-ui-components.scroll-areas {
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -284,18 +280,18 @@ h5 {
   width: 100%;
   height: 100%;
 }
-.separators {
+.frugal-ui-components.separators {
   width: 100%;
   margin: 0rem;
 }
-.spacers {
+.frugal-ui-components.spacers {
   display: flex;
   width: 100%;
   height: 100%;
   flex: 1;
 }
-.stacks-vertical,
-.stacks-horizontal {
+.frugal-ui-components.stacks-vertical,
+.frugal-ui-components.stacks-horizontal {
   display: flex;
   flex: 1;
   width: 100%;
@@ -304,44 +300,40 @@ h5 {
   justify-content: center;
   overflow: visible;
 }
-.stacks-vertical {
+.frugal-ui-components.stacks-vertical {
   flex-direction: column;
   align-items: stretch;
   height: 100%;
 }
-.stacks-horizontal {
+.frugal-ui-components.stacks-horizontal {
   flex-direction: row;
 }
-span {
+span.frugal-ui-components {
   text-align: center;
 }
-h1,
-h2,
-h3,
-h4,
-h5 {
+.frugal-ui-components:is(h1, h2, h3, h4, h5) {
   flex-shrink: 0;
 }
-.inputs:not([type=checkbox]):not([type=radio]):not([type=range]),
-.textareas,
-.typeable-items {
+.frugal-ui-components.inputs:not([type=checkbox]):not([type=radio]):not([type=range]),
+.frugal-ui-components.textareas,
+.frugal-ui-components.typeable-items {
   padding: var(--padding-md);
   border-radius: var(--corners);
 }
-.visual-groups {
+.frugal-ui-components.visual-groups {
   width: 100%;
   height: auto;
   flex: 0;
   border-radius: var(--corners);
 }
-.visual-groups > * {
+.frugal-ui-components.visual-groups > * {
   border-radius: 0rem;
 }
-.visual-groups :is(.buttons, .selects, .inputs, .textareas):not(.forcing-default-styles) {
+.frugal-ui-components.visual-groups :is(.buttons, .selects, .inputs, .textareas):not(.forcing-default-styles) {
   width: 100% !important;
   justify-content: start !important;
 }
-.stages {
+.frugal-ui-components.stages {
   position: relative;
   display: flex;
   align-items: stretch;
@@ -349,100 +341,100 @@ h5 {
   height: 100%;
   overflow: hidden;
 }
-.stages:has(.scenes-column) {
+.frugal-ui-components.stages:has(.frugal-ui-components.scenes-column) {
   overflow-x: auto;
 }
-.scenes {
+.frugal-ui-components.scenes {
   display: flex;
   flex-shrink: 0;
   width: 20rem;
   max-width: 100%;
   height: 100%;
 }
-.scenes.scenes-full,
-.scenes.scenes-navigation,
-.scenes.scenes-content {
+.frugal-ui-components.scenes.scenes-full,
+.frugal-ui-components.scenes.scenes-navigation,
+.frugal-ui-components.scenes.scenes-content {
   position: absolute;
   width: 100%;
 }
-.navigation-links span {
+.frugal-ui-components.navigation-links span {
   white-space: nowrap;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 @media (min-width: 850px) {
-  .scenes {
+  .frugal-ui-components.scenes {
     --navigation-width: 18rem;
   }
-  .scenes-navigation {
+  .frugal-ui-components.scenes-navigation {
     max-width: var(--navigation-width);
     left: 0rem;
   }
-  .scenes-content {
+  .frugal-ui-components.scenes-content {
     max-width: calc(100% - var(--navigation-width));
     left: var(--navigation-width);
   }
 }
-.tab-views {
+.frugal-ui-components.tab-views {
   flex-direction: column-reverse;
 }
-.tab-views > div {
+.frugal-ui-components.tab-views > div {
   height: 100%;
   flex: 1;
   display: flex;
 }
-.tab-views > .stacks-horizontal > .button-groups {
+.tab-views > .stacks-horizontal > .frugal-ui-components.button-groups {
   display: grid;
   width: 100%;
   grid-template-columns: repeat(auto-fit, minmax(1rem, 1fr));
   justify-content: center;
 }
 @media (max-width: 520px) {
-  .tab-views > .stacks-horizontal .buttons {
+  .tab-views > .stacks-horizontal .frugal-ui-components.buttons {
     flex-direction: column-reverse;
   }
 }
 @media (min-width: 850px) {
-  .tab-views {
+  .frugal-ui-components.tab-views {
     flex-direction: column;
   }
-  .tab-views > .stacks-horizontal > .button-groups {
+  .tab-views > .stacks-horizontal > .frugal-ui-components.button-groups {
     grid-template-columns: repeat(auto-fit, minmax(12rem, 1rem));
   }
 }
-.navigation-links > .stacks-horizontal {
+.navigation-links > .frugal-ui-components.stacks-horizontal {
   justify-content: start;
   gap: var(--gap);
 }
-.tab-views > .stacks-horizontal {
+.tab-views > .frugal-ui-components.stacks-horizontal {
   padding: var(--padding-md);
 }
 @media (max-width: 520px) {
-  .tab-views > .stacks-horizontal .buttons {
+  .tab-views > .stacks-horizontal .frugal-ui-components.buttons {
     gap: 0.2rem;
   }
 }
 @media (min-width: 850px) {
-  .tab-views > .stacks-horizontal {
+  .tab-views > .frugal-ui-components.stacks-horizontal {
     padding: var(--padding-xs);
   }
-  .tab-views > .stacks-horizontal .buttons {
+  .tab-views > .stacks-horizontal .frugal-ui-components.buttons {
     padding: var(--padding-xs);
   }
 }
 @media (max-width: 520px) {
-  .hides-responsively.screen-mobile {
+  .frugal-ui-components.hides-responsively.screen-mobile {
     display: none;
   }
 }
 @media (min-width: 520px) and (max-width: 850px) {
-  .hides-responsively.screen-tablet {
+  .frugal-ui-components.hides-responsively.screen-tablet {
     display: none;
   }
 }
 @media (min-width: 850px) {
-  .hides-responsively.screen-desktop {
+  .frugal-ui-components.hides-responsively.screen-desktop {
     display: none;
   }
 }
@@ -520,13 +512,12 @@ h5 {
 }
 
 /* node_modules/@frugal-ui/base/styles/theme.css */
-* {
+.frugal-ui-components {
   accent-color: var(--accent);
   color: var(--text);
   font-size: medium;
 }
-*,
-span:not(.icons) {
+.frugal-ui-components:not(.icons) {
   font-family:
     sans-rg,
     sans-serif,
@@ -535,12 +526,12 @@ span:not(.icons) {
 html {
   background: var(--background);
 }
-.checkable-items {
+.frugal-ui-components.checkable-items {
   background-color: var(--checkable);
 }
-.inputs:not([type=checkbox]):not([type=radio]):not([type=range]),
-.textareas,
-.typeable-items {
+.frugal-ui-components.inputs:not([type=checkbox]):not([type=radio]):not([type=range]),
+.frugal-ui-components.textareas,
+.frugal-ui-components.typeable-items {
   background-color: var(--inset);
   box-shadow: 0px 0px 2px var(--shadows) inset;
   border: 1px solid var(--lines);
@@ -550,14 +541,14 @@ html {
     sans-serif,
     sans;
 }
-.boxes {
+.frugal-ui-components.boxes {
   box-shadow: 0px 0px 3px var(--shadows) inset;
   border: 1px solid var(--lines);
   background-color: var(--inset);
 }
-.buttons,
-.selects,
-.submits {
+.frugal-ui-components.buttons,
+.frugal-ui-components.selects,
+.frugal-ui-components.submits {
   font-size: medium;
   font-family:
     mono-md,
@@ -567,131 +558,127 @@ html {
   background-color: var(--clickable);
   border: 1px solid var(--lines);
 }
-.buttons {
+.frugal-ui-components.buttons {
   background-color: transparent;
 }
-.buttons span:not(.icons) {
+.buttons span.frugal-ui-components:not(.icons) {
   font-family: inherit;
 }
-.buttons-transparent {
+.frugal-ui-components.buttons-transparent {
   border-color: transparent;
 }
-.buttons.buttons-primary,
-.submits {
+.frugal-ui-components.buttons.buttons-primary,
+.frugal-ui-components.submits {
   background: var(--accent);
   color: var(--on-accent);
   border-color: var(--accent-border);
 }
-.buttons.buttons-destructive {
+.frugal-ui-components.buttons.buttons-destructive {
   background: var(--destructive);
   color: var(--on-destructive);
   border-color: var(--destructive-border);
 }
-.navigation-links:active,
-.buttons:not([disabled]):active,
-.buttons-pressed {
+.frugal-ui-components.navigation-links:active,
+.frugal-ui-components.buttons:not([disabled]):active,
+.frugal-ui-components.buttons-pressed {
   background: var(--pressed);
   color: var(--on-clickable);
   border-color: var(--clickable-border);
 }
-.button-groups .buttons:not(.buttons-pressed) {
+.button-groups .frugal-ui-components.buttons:not(.buttons-pressed) {
   box-shadow: none;
 }
-h1,
-h2,
-h3,
-h4,
-h5 {
+.frugal-ui-components:is(h1, h2, h3, h4, h5) {
   font-family:
     headings,
     mono-md,
     monospace,
-    mono;
+    mono !important;
   text-transform: uppercase;
 }
-h1 {
+h1.frugal-ui-components {
   font-size: x-large;
 }
-h2 {
+h2.frugal-ui-components {
   font-size: larger;
 }
-h3 {
+h3.frugal-ui-components {
   font-size: large;
 }
-h4 {
+h4.frugal-ui-components {
   font-size: small;
 }
-h5 {
+h5.frugal-ui-components {
   font-size: x-small;
 }
-.labels {
+.frugal-ui-components.labels {
   font-size: small;
 }
-.list-items > *,
-.list-items > div > * {
+.list-items > .frugal-ui-components,
+.list-items > div > .frugal-ui-components {
   color: inherit;
 }
-.list-items[aria-selected=true] {
+.frugal-ui-components.list-items[aria-selected=true] {
   background: var(--pressed);
   color: var(--on-clickable);
 }
-.popover-contents {
+.frugal-ui-components.popover-contents {
   background-color: var(--background-alt);
   box-shadow: 0px 0px 7px var(--shadows);
   border: 1px solid var(--lines);
 }
-.sheet-contents {
+.frugal-ui-components.sheet-contents {
   background-color: var(--background);
 }
-.separators {
+.frugal-ui-components.separators {
   border: none;
   border-bottom: 1px solid var(--lines);
 }
-.textareas {
+.frugal-ui-components.textareas {
   resize: none;
 }
-.visual-groups {
+.frugal-ui-components.visual-groups {
   background-color: var(--background-alt);
 }
-.visual-groups :is(.buttons, .selects, .inputs, .textareas, .submits):not(.forcing-default-styles) {
+.visual-groups .frugal-ui-components:is(.buttons, .selects, .inputs, .textareas, .submits):not(.forcing-default-styles) {
   border: none !important;
   box-shadow: none !important;
 }
-.visual-groups :is(.buttons, .selects, .inputs, .textareas, .submits):not(.forcing-default-styles):not(:active) {
+.visual-groups .frugal-ui-components:is(.buttons, .selects, .inputs, .textareas, .submits):not(.forcing-default-styles):not(:active) {
   background-color: transparent !important;
 }
-.visual-groups .icons:not(.forcing-default-styles) {
+.visual-groups .frugal-ui-components.icons:not(.forcing-default-styles) {
   font-size: 1rem;
 }
-.visual-groups > *:is(.ordered-containers:last-child > :not(.last-item), *:not(.ordered-containers) :not(:last-child):not(.last-item)):not(.forcing-default-styles) {
+.visual-groups > .frugal-ui-components:is(.ordered-containers:last-child > :not(.last-item), *:not(.ordered-containers) :not(:last-child):not(.last-item)):not(.forcing-default-styles) {
   border-bottom: 1px solid var(--lines) !important;
 }
-.visual-groups > :is(.ordered-containers:first-child .first-item, :not(.ordered-containers) > *:first-child) {
+.visual-groups > .frugal-ui-components:is(.ordered-containers:first-child .first-item, :not(.ordered-containers) > *:first-child) {
   border-top-left-radius: var(--corners);
   border-top-right-radius: var(--corners);
 }
-.visual-groups > :is(.ordered-containers:last-child .last-item, :not(.ordered-containers) > *:last-child) {
+.visual-groups > .frugal-ui-components:is(.ordered-containers:last-child .last-item, :not(.ordered-containers) > *:last-child) {
   border-bottom-left-radius: var(--corners);
   border-bottom-right-radius: var(--corners);
 }
-.scenes {
+.frugal-ui-components.scenes {
   background-color: var(--background);
   border-right: 1px solid var(--lines);
 }
-.tab-views > .stacks-horizontal {
+.tab-views > .frugal-ui-components.stacks-horizontal {
   border-top: 1px solid var(--lines);
 }
 @media (max-width: 520px) {
-  .tab-views > .stacks-horizontal .buttons {
+  .tab-views > .stacks-horizontal .frugal-ui-components.buttons {
     gap: 0.2rem;
   }
 }
 @media (min-width: 850px) {
-  .tab-views > .stacks-horizontal {
+  .tab-views > .frugal-ui-components.stacks-horizontal {
     border-top: none;
     border-bottom: 1px solid var(--lines);
   }
-  .tab-views > .stacks-horizontal .buttons span {
+  .tab-views > .stacks-horizontal .buttons span.frugal-ui-components {
     font-size: small;
   }
 }
