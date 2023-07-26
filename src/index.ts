@@ -303,6 +303,7 @@ export async function main() {
 							},
 						}),
 				)
+					.cssOverflow('hidden')
 					.useDefaultPadding()
 					.useDefaultSpacing(),
 			),
