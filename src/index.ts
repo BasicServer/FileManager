@@ -301,9 +301,9 @@ export async function main() {
 							action: (e) => {
 								e.preventDefault(), saveFile();
 							},
-						}),
+						})
+					.cssOverflow('hidden'),
 				)
-					.cssOverflow('hidden')
 					.useDefaultPadding()
 					.useDefaultSpacing(),
 			),
