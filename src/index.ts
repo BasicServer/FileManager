@@ -1,57 +1,24 @@
-import FilePicker, { SelectedItem, Types } from '@basicserver/filepicker';
-import { readFile, writeFile } from '@basicserver/fs-frontend';
+import FilePicker, {SelectedItem, Types} from '@basicserver/filepicker';
+import {readFile, writeFile} from '@basicserver/fs-frontend';
 import {
 	buildInterface,
 	Button,
 	ButtonStyles,
-	ComputedState,
-	Div,
-	Header,
+	ComputedState, Header,
 	Input,
-	Label,
-	LocalStorageState,
-	Popover,
+	Label, Popover,
 	Select,
 	Separator,
-	Sheet,
-	Spacer,
-	State,
-	TextInputCfg,
-	UUID,
-	VStack,
+	Sheet, State,
+	TextInputCfg, VStack
 } from '@frugal-ui/base';
-import { enc } from 'crypto-js';
-import { decrypt, encrypt } from 'crypto-js/aes';
-import Map from 'lang-map';
-import * as Monaco from 'monaco-editor';
-import './editor.css';
-
-// browser config
-const rootName = 'Root';
-const rootPath = '';
-
-// encryption config
-enum ClearPasswordPreferences {
-	Immediate = 'Immediately',
-	Encryption = 'After Encrypting',
-	Closing = 'When Closing',
-	Never = 'Never',
-}
-const defaultClearPasswordPreference = Object.values(ClearPasswordPreferences)[0];
-const clearPasswordPreference = new LocalStorageState(
-	'clear-password',
-	defaultClearPasswordPreference,
-);
-if (
-	Object.values(ClearPasswordPreferences).indexOf(
-		clearPasswordPreference.value as any,
-	) == -1
-)
-	clearPasswordPreference.value = defaultClearPasswordPreference;
+import {clearPasswordPreference, ClearPasswordPreferences, ROOT_NAME, ROOT_PATH} from './Data/defaults';
+import Editor from './Editor/Editor';
+import {decryptFile, encryptFile, EncryptionFnCfg} from './helpers';
 
 // main
 export async function main() {
-	document.title = rootName;
+	document.title = ROOT_NAME;
 
 	// Editing
 	const isEditSheetOpen = new State(false);
@@ -93,43 +60,17 @@ export async function main() {
 	const password = new State('');
 	const isEncryptionPopoverOpen = new State(false);
 
-	function decryptFile() {
-		try {
-			const decrypted = decrypt(fileContents.value, password.value);
-			if (decrypted.sigBytes < 0) throw 'wrong password';
-			const res = decrypted.toString(enc.Utf8);
-			fileContents.value = res;
-			isSaved.value = false;
-
-			if (
-				clearPasswordPreference.value ==
-				ClearPasswordPreferences.Immediate
-			)
-				password.value = '';
-		} catch {
-			alert('Decryption failed. Check your password');
-		}
-	}
-	function encryptFile() {
-		try {
-			const res = encrypt(fileContents.value, password.value).toString();
-			fileContents.value = res;
-			isSaved.value = false;
-
-			if (
-				clearPasswordPreference.value ==
-					ClearPasswordPreferences.Immediate ||
-				clearPasswordPreference.value ==
-					ClearPasswordPreferences.Encryption
-			)
-				password.value = '';
-		} catch (error) {
-			alert(`Encryption failed: ${error}`);
-		}
+	function encryptOrDecrypt(action: (cfg: EncryptionFnCfg) => void) {
+		action({
+			fileContents,
+			password,
+			clearPasswordPreference,
+			isSaved,
+		})
 	}
 
 	// File selection
-	const selectedFile = new State(rootPath);
+	const selectedFile = new State(ROOT_PATH);
 	const selectedItem = new SelectedItem((item) => {
 		//update title
 		if (item.isDirectory == true && item.name != undefined)
@@ -160,8 +101,10 @@ export async function main() {
 		}
 	}
 
+	// Interface
 	buildInterface(
 		VStack(
+			// Browser
 			Header(
 				{
 					text: 'Your files',
@@ -174,11 +117,12 @@ export async function main() {
 				}).toggleAttr('disabled', isOpenButtonDisabled),
 			).cssBorderBottom('1px solid var(--lines)'),
 
-			FilePicker(rootName, selectedFile.value, selectedItem, [
+			FilePicker(ROOT_NAME, selectedFile.value, selectedItem, [
 				Types.Directory,
 				Types.File,
 			]),
 
+			// Editor
 			Sheet(
 				{
 					accessibilityLabel: 'edit file',
@@ -215,13 +159,13 @@ export async function main() {
 									accessibilityLabel: 'decrypt file',
 									iconName: 'lock_open',
 									text: 'Decrypt',
-									action: decryptFile,
+									action: () => encryptOrDecrypt(decryptFile),
 								}),
 								Button({
 									accessibilityLabel: 'encrypt file',
 									iconName: 'lock',
 									text: 'Encrypt',
-									action: encryptFile,
+									action: () => encryptOrDecrypt(encryptFile),
 								}),
 
 								Separator(),
@@ -263,46 +207,13 @@ export async function main() {
 						}),
 					),
 
-					Div()
-						.access((self) => {
-							const editor = Monaco.editor.create(self, {
-								fontFamily: 'mono-rg',
-								automaticLayout: true,
-							});
+					Editor({
+						selectedFile,
+						fileContents,
+						isSaved,
+						saveFile,
+					}),
 
-							Monaco.editor.setTheme('vs-dark');
-
-							self.addEventListener('input', () => {
-								isSaved.value = false;
-								fileContents.value = editor.getValue();
-							});
-							fileContents.addBinding({
-								uuid: new UUID(),
-								action: (newValue) => {
-									//prevent infinite loop
-									if (self.contains(document.activeElement))
-										return;
-
-									editor.setValue(newValue);
-									const language = getLanguage(
-										selectedFile.value,
-									);
-									Monaco.editor.setModelLanguage(
-										editor.getModel()!,
-										language,
-									);
-								},
-							});
-						})
-						.addToClass('editor-containers')
-						.registerKeyboardShortcuts({
-							modifiers: ['commandOrControl'],
-							key: 's',
-							action: (e) => {
-								e.preventDefault(), saveFile();
-							},
-						})
-					.cssOverflow('hidden'),
 				)
 					.useDefaultPadding()
 					.useDefaultSpacing(),
@@ -311,9 +222,3 @@ export async function main() {
 	);
 }
 
-function getLanguage(fileName: string) {
-	const extension = fileName.split('.').reverse()[0];
-	const language = Map.languages(extension)[0];
-	if (typeof language != 'string') return 'text/plain';
-	return language;
-}
