@@ -1,21 +1,13 @@
-import { writeFile } from '@basicserver/fs-frontend';
+import {writeFile} from '@basicserver/fs-frontend';
 import {
 	BindableObject,
 	Button,
 	ButtonStyles,
-	Header,
-	Input,
-	Label,
-	Popover,
-	Select,
-	Separator,
-	Sheet,
-	State,
-	TextInputCfg,
-	VStack,
+	Header, Sheet,
+	State, VStack
 } from '@frugal-ui/base';
-import { clearPasswordPreference, ClearPasswordPreferences } from '../Data/defaults';
-import { decryptFile, encryptFile, EncryptionFnCfg } from '../helpers';
+import {clearPasswordPreference, ClearPasswordPreferences} from '../Data/defaults';
+import EncryptionPopover from './EncryptionPopover';
 import TextEditor from './TextEditor';
 
 export interface EditorViewCfg {
@@ -59,16 +51,6 @@ export default function EditorView(configuration: EditorViewCfg) {
 
 	// Encryption
 	const password = new State('');
-	const isEncryptionPopoverOpen = new State(false);
-
-	function encryptOrDecrypt(action: (cfg: EncryptionFnCfg) => void) {
-		action({
-			fileContents,
-			password,
-			clearPasswordPreference,
-			isSaved,
-		});
-	}
 
 	// Saving
 	async function saveFile() {
@@ -94,60 +76,10 @@ export default function EditorView(configuration: EditorViewCfg) {
 					text: 'Edit file',
 				},
 
-				Popover({
-					accessibilityLabel: 'manage encryption',
-					isOpen: isEncryptionPopoverOpen,
-					toggle: Button({
-						accessibilityLabel: 'manage encryption',
-						iconName: 'key',
-						action: () =>
-							(isEncryptionPopoverOpen.value =
-								!isEncryptionPopoverOpen.value),
-					}),
-					content: VStack(
-						Label(
-							'Password',
-							Input(
-								new TextInputCfg(password, '**********'),
-							).setAttr('type', 'password'),
-						),
-
-						Button({
-							accessibilityLabel: 'decrypt file',
-							iconName: 'lock_open',
-							text: 'Decrypt',
-							action: () => encryptOrDecrypt(decryptFile),
-						}),
-						Button({
-							accessibilityLabel: 'encrypt file',
-							iconName: 'lock',
-							text: 'Encrypt',
-							action: () => encryptOrDecrypt(encryptFile),
-						}),
-
-						Separator(),
-
-						Label(
-							'Clear password',
-							Select(
-								clearPasswordPreference,
-								new State(
-									Object.values(ClearPasswordPreferences).map(
-										(preference) => {
-											return {
-												label: preference,
-												value: preference,
-											};
-										},
-									),
-								),
-							),
-						),
-					)
-						.cssWidth('20rem')
-						.cssHeight('auto')
-						.useDefaultSpacing()
-						.useDefaultPadding(),
+				EncryptionPopover({
+					fileContents,
+					isSaved,
+					password,
 				}),
 
 				Button({

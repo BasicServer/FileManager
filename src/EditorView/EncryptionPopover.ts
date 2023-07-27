@@ -23,7 +23,7 @@ export interface EncryptionPopoverCfg {
 export default function EncryptionPopover(configuration: EncryptionPopoverCfg) {
 	const { fileContents, password, isSaved } = configuration;
 		
-	const isEncryptionPopoverOpen = new State(false);
+	const isOpen = new State(false);
 	function encryptOrDecrypt(action: (cfg: EncryptionFnCfg) => void) {
 		action({
 			fileContents,
@@ -35,13 +35,13 @@ export default function EncryptionPopover(configuration: EncryptionPopoverCfg) {
 
 	return Popover({
 		accessibilityLabel: 'manage encryption',
-		isOpen: isEncryptionPopoverOpen,
+		isOpen: isOpen,
 		toggle: Button({
 			accessibilityLabel: 'manage encryption',
 			iconName: 'key',
 			action: () =>
-				(isEncryptionPopoverOpen.value =
-					!isEncryptionPopoverOpen.value),
+				(isOpen.value =
+					!isOpen.value),
 		}),
 		content: VStack(
 			Label(
