@@ -3,14 +3,14 @@ import Map from 'lang-map';
 import * as Monaco from 'monaco-editor';
 import './editor.css';
 
-export interface EditorCfg {
+export interface TextEditorCfg {
 	selectedFile: BindableObject<string>;
 	fileContents: BindableObject<string>;
 	isSaved: BindableObject<boolean>;
 	saveFile: () => void;
 }
 
-export default function Editor(configuration: EditorCfg) {
+export default function TextEditor(configuration: TextEditorCfg) {
 	const { selectedFile, saveFile, fileContents, isSaved } = configuration;
 
 	return Div()

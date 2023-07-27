@@ -5209,7 +5209,7 @@ h5.frugal-ui-components {
   font-family: var(--monaco-monospace-font);
 }
 
-/* src/Editor/editor.css */
+/* src/EditorView/editor.css */
 .editor-containers {
   width: 100%;
   height: 100%;
