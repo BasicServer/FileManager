@@ -19,7 +19,7 @@ export async function main() {
 	const isEditSheetOpen = new State(false);
 	const shouldEditorUpdate = new State(false);
 	const fileContents = new State('');
-	const isSaved = new State(false);
+	const isSaved = new State(true);
 
 	async function openFile() {
 		if (selectedFile.value == '')

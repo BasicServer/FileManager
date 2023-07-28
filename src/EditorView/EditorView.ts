@@ -1,12 +1,18 @@
-import {writeFile} from '@basicserver/fs-frontend';
+import { writeFile } from '@basicserver/fs-frontend';
 import {
 	BindableObject,
 	Button,
 	ButtonStyles,
-	Header, Sheet,
-	State, VStack
+	Header,
+	Sheet,
+	State,
+	UUID,
+	VStack,
 } from '@frugal-ui/base';
-import {clearPasswordPreference, ClearPasswordPreferences} from '../Data/defaults';
+import {
+	clearPasswordPreference,
+	ClearPasswordPreferences,
+} from '../Data/defaults';
 import EncryptionPopover from './EncryptionPopover';
 import TextEditor from './TextEditor';
 
@@ -50,6 +56,14 @@ export default function EditorView(configuration: EditorViewCfg) {
 
 		execute();
 	}
+	window.addEventListener(
+		'beforeunload',
+		(e: Event) => {
+			if (isSaved.value == true) return;
+			e.returnValue = false;
+		},
+		{ capture: true },
+	);
 
 	// Encryption
 	const password = new State('');
@@ -104,9 +118,27 @@ export default function EditorView(configuration: EditorViewCfg) {
 				selectedFile,
 				fileContents,
 				isSaved,
-				saveFile,
 			}),
 		)
+			.registerKeyboardShortcuts(
+				{
+					modifiers: ['commandOrControl'],
+					key: 's',
+					action: (e) => {
+						e.preventDefault();
+						saveFile();
+					},
+				},
+				{
+					modifiers: ['commandOrControl'],
+					key: 'w',
+					action: (e) => {
+						e.preventDefault();
+						closeEditor();
+					},
+				},
+			)
+
 			.useDefaultPadding()
 			.useDefaultSpacing(),
 	);

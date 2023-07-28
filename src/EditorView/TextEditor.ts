@@ -8,14 +8,12 @@ export interface TextEditorCfg {
 	selectedFile: BindableObject<string>;
 	fileContents: BindableObject<string>;
 	isSaved: BindableObject<boolean>;
-	saveFile: () => void;
 }
 
 export default function TextEditor(configuration: TextEditorCfg) {
 	const {
 		shouldEditorUpdate,
 		selectedFile,
-		saveFile,
 		fileContents,
 		isSaved,
 	} = configuration;
@@ -54,13 +52,6 @@ export default function TextEditor(configuration: TextEditorCfg) {
 			});
 		})
 		.addToClass('editor-containers')
-		.registerKeyboardShortcuts({
-			modifiers: ['commandOrControl'],
-			key: 's',
-			action: (e) => {
-				e.preventDefault(), saveFile();
-			},
-		})
 		.cssOverflow('hidden');
 }
 
