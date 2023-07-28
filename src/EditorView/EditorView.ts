@@ -82,6 +82,7 @@ export default function EditorView(configuration: EditorViewCfg) {
 					fileContents,
 					isSaved,
 					password,
+					shouldEditorUpdate,
 				}),
 
 				Button({

@@ -18,13 +18,15 @@ export interface EncryptionPopoverCfg {
 	fileContents: BindableObject<string>;
 	password: BindableObject<string>;
 	isSaved: BindableObject<boolean>;
+	shouldEditorUpdate: BindableObject<boolean>;
 }
 
 export default function EncryptionPopover(configuration: EncryptionPopoverCfg) {
-	const { fileContents, password, isSaved } = configuration;
+	const { shouldEditorUpdate, fileContents, password, isSaved } = configuration;
 		
 	const isOpen = new State(false);
 	function encryptOrDecrypt(action: (cfg: EncryptionFnCfg) => void) {
+		shouldEditorUpdate.value = true;
 		action({
 			fileContents,
 			password,
