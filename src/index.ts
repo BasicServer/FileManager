@@ -17,11 +17,14 @@ export async function main() {
 
 	// Editing
 	const isEditSheetOpen = new State(false);
+	const shouldEditorUpdate = new State(false);
 	const fileContents = new State('');
 	const isSaved = new State(false);
+
 	async function openFile() {
 		if (selectedFile.value == '')
 			return alert('Cannot open file: path not specified');
+		shouldEditorUpdate.value = true;
 		fileContents.value = await readFile(selectedFile.value);
 		isSaved.value = true;
 		isEditSheetOpen.value = true;
@@ -69,6 +72,7 @@ export async function main() {
 
 			EditorView({
 				isEditSheetOpen,
+				shouldEditorUpdate,
 				isSaved,
 				fileContents,
 				selectedFile,

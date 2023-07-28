@@ -1,7 +1,7 @@
-import {BindableObject} from "@frugal-ui/base";
-import {enc} from "crypto-js";
-import {decrypt, encrypt} from "crypto-js/aes";
-import {ClearPasswordPreferences} from "./Data/defaults";
+import { BindableObject } from '@frugal-ui/base';
+import { enc } from 'crypto-js';
+import { decrypt, encrypt } from 'crypto-js/aes';
+import { ClearPasswordPreferences } from './Data/defaults';
 
 // Encryption
 export interface EncryptionFnCfg {
@@ -12,7 +12,8 @@ export interface EncryptionFnCfg {
 }
 
 export function encryptFile(configuration: EncryptionFnCfg) {
-	const { fileContents, password, clearPasswordPreference, isSaved } = configuration;
+	const { fileContents, password, clearPasswordPreference, isSaved } =
+		configuration;
 
 	try {
 		const res = encrypt(fileContents.value, password.value).toString();
@@ -31,7 +32,8 @@ export function encryptFile(configuration: EncryptionFnCfg) {
 }
 
 export function decryptFile(configuration: EncryptionFnCfg) {
-	const { fileContents, password, clearPasswordPreference, isSaved } = configuration;
+	const { fileContents, password, clearPasswordPreference, isSaved } =
+		configuration;
 
 	try {
 		const decrypted = decrypt(fileContents.value, password.value);

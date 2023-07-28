@@ -5215,9 +5215,6 @@ h5.frugal-ui-components {
   height: 100%;
   flex: 1;
 }
-.editor-containers span {
-  font-family: "mono-rg" !important;
-}
 .monaco-editor {
   padding-top: 1rem;
 }

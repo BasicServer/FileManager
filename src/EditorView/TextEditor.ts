@@ -1,9 +1,10 @@
-import {BindableObject, Div, UUID} from "@frugal-ui/base";
+import { BindableObject, Div, UUID } from '@frugal-ui/base';
 import Map from 'lang-map';
 import * as Monaco from 'monaco-editor';
 import './editor.css';
 
 export interface TextEditorCfg {
+	shouldEditorUpdate: BindableObject<boolean>;
 	selectedFile: BindableObject<string>;
 	fileContents: BindableObject<string>;
 	isSaved: BindableObject<boolean>;
@@ -11,18 +12,28 @@ export interface TextEditorCfg {
 }
 
 export default function TextEditor(configuration: TextEditorCfg) {
-	const { selectedFile, saveFile, fileContents, isSaved } = configuration;
+	const {
+		shouldEditorUpdate,
+		selectedFile,
+		saveFile,
+		fileContents,
+		isSaved,
+	} = configuration;
 
 	return Div()
 		.access((self) => {
 			const editor = Monaco.editor.create(self, {
 				fontFamily: 'mono-rg',
 				automaticLayout: true,
+				wordWrap: 'on',
 			});
 
 			Monaco.editor.setTheme('vs-dark');
+			document.fonts.ready.then(() => {
+				Monaco.editor.remeasureFonts();
+			});
 
-			self.addEventListener('input', () => {
+			editor.getModel()?.onDidChangeContent(() => {
 				isSaved.value = false;
 				fileContents.value = editor.getValue();
 			});
@@ -30,7 +41,8 @@ export default function TextEditor(configuration: TextEditorCfg) {
 				uuid: new UUID(),
 				action: (newValue) => {
 					//prevent infinite loop
-					if (self.contains(document.activeElement)) return;
+					if (shouldEditorUpdate.value == false) return;
+					shouldEditorUpdate.value = false;
 
 					editor.setValue(newValue);
 					const language = getLanguage(selectedFile.value);

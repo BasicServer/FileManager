@@ -12,6 +12,7 @@ import TextEditor from './TextEditor';
 
 export interface EditorViewCfg {
 	isEditSheetOpen: BindableObject<boolean>;
+	shouldEditorUpdate: BindableObject<boolean>;
 	isSaved: BindableObject<boolean>;
 	fileContents: BindableObject<string>;
 	selectedFile: BindableObject<string>;
@@ -20,6 +21,7 @@ export interface EditorViewCfg {
 export default function EditorView(configuration: EditorViewCfg) {
 	const {
 		isEditSheetOpen,
+		shouldEditorUpdate,
 		isSaved,
 		fileContents,
 		selectedFile,
@@ -97,6 +99,7 @@ export default function EditorView(configuration: EditorViewCfg) {
 			),
 
 			TextEditor({
+				shouldEditorUpdate,
 				selectedFile,
 				fileContents,
 				isSaved,
